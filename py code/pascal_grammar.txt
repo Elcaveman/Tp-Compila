@@ -1,0 +1,74 @@
+/*The quantifiers in this document is similar to REGEX
+CAPSONLY is used for NONTERMINALS (grammar rules)
+noncap|specialsymbols are used for Terminal (unique)
+CamelCase for a list of elements (Terminals or nonTerminals)
+//comment
+*/
+
+PROGRAM := program id; uses id; (FPBLOCK;)* BLOCK.
+FPBLOCK := (FUNC|PROC) BLOCK
+FUNC := function id(FUNCARGS) : DataType;
+PROC := procedure id(FUNCARGS);
+BLOCK := CONSTS* VAR* INSTS
+
+FUNCARGS := FUNCARGS,FUNCARG|FUNCARG|    //not used for calling the function but for defining it
+FUNCARG := ASGN_EXP|TUPLE:DataType
+
+CONSTS := const ASGN_EXP;|const id;|const TUPLE : DataType;|
+VAR := var ASGN_EXP;|var id;|var TUPLE : DataType;|
+TUPLE := TUPLE,id|id|
+
+ARRAY := array [OR_EXP..OR_EXP] of SimpleDataType;
+SimpleDataType := integer|real|char|string
+DataType := SimpleDataType|ARRAY
+Literal := int_lit|float_lit|string_lit
+
+ASGNOP := := | += | -= | /= | *=
+UNARYOP := not |@ |^|-|+
+BINARYOP := and|or|mod|xor
+RELCOMPOP := < | > | <= | >=
+RELEQOP := =|<>
+
+INSTS := begin (INST;)* end
+INST := IF | FOR | WHILE | OR_EXP
+
+IF := if OR_EXP then BLOCK|if OR_EXP then BLOCK else BLOCK
+FOR := for ASGN_EXP to OR_EXP do BLOCK
+WHILE := while OR_EXP do BLOCK
+
+// to explain OR_EXP we need to start at the begining
+PRIMARY_EXP := id | Literal |( PRIMARY_EXP )
+POSTFIX_EXP :=  PRIMARY_EXP |
+                POSTFIX_EXP [ PRIMARY_EXP ] |
+                POSTFIX_EXP ( EXP_LIST ) |  //used to make func/prod calls
+                POSTFIX_EXP ++|POSTFIX_EXP --
+UNARY_EXP :=    POSTFIX_EXP|
+                ++UNARY_EXP|
+                --UNARY_EXP|
+                UNARYOP UNARY_EXP
+
+MULT_EXP :=     UNARY_EXP|
+                MULT_EXP * UNARY_EXP|
+                MULT_EXP / UNARY_EXP|
+                MULT_EXP mod UNARY_EXP
+
+ADD_EXP :=      MULT_EXP|
+                ADD_EXP + MULT_EXP|
+                ADD_EXP - MULT_EXP|
+REL_EXP :=      ADD_EXP|
+                REL_EXP RELCOMPOP ADD_EXP
+
+EQ_EXP  :=      REL_EXP|
+                EQ_EXP = REL_EXP|
+                EQ_EXP <> REL_EXP
+
+AND_EXP :=      EQ_EXP|
+                AND_EXP and OR_EXP
+
+OR_EXP  :=      AND_EXP|
+                OR_EXP or AND_EXP
+
+ASGN_EXP :=     OR_EXP|UNARY_EXP ASGNOP ASGN_EXP
+
+EXP_LIST = EXP_LIST,OR_EXP|OR_EXP|
+

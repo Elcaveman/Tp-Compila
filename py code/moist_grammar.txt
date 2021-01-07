@@ -1,0 +1,37 @@
+- technologie/publique/principe visé :
+    - service oriented apps(componenets).
+    - all languages used in microservices
+    - message broker out of the box
+    - orienté web
+
+- spécialité dyal language:
+    - ease to use
+    - Big API
+    - Functional by default with optional OOP (python)
+    - compiled??
+    - dynamic / static typing??
+
+- raison d'étre language
+    - make microservices simple to:
+        - use and manipulate
+        - easy to debug via a detailled log at the developer
+        disposition
+    - can run concurently on a distributed system
+    - easy manipulation of system ressources (i/o,
+    multi processing, multi threading)
+    - customisable performance boosts (GPU,CPU ressources)
+    ( alghortime d'optimisation )( message brokin technique)
+    - customisable security options for the message broker
+    (http, telnet, https ...)
+    - customisable optimisation that depends on the app
+    ( stronger i/o but less speed )( more speed but a 
+    weaker i/o )( very good concurent request handling ... )
+    
+- how it works:
+    - all stuff u find in a programming language
+    - function f()
+    - async function f()
+    - plugin f("script.py")
+
+- debuging tools
+- a good runtime
