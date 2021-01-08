@@ -1,19 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "include/lexer.h"
 #include "include/erno.h"
-#define True 1
-#define False 0
-//Token/Array Utililities
-typedef struct token_t{
-    char name[30];
-    char value[50];
-}Token;
-typedef struct t_array{
-    size_t used;
-    size_t size;
-    Token *array;
-}TokenArray;
+
 void initToken(Token* token_adr , char name[30] , char value[50]){
     strcpy(token_adr->name,name);
     strcpy(token_adr->value,value);
@@ -33,7 +20,7 @@ void insertArray(TokenArray *a, Token element) {
     // a->used is the number of used entries, because a->array[a->used++] updates a->used only *after* the array has been accessed.
     // Therefore a->used can go up to a->size 
     if (a->used == a->size) {
-        a->size *= 2;
+        a->size *= 2;//e*n memory usage which is bad
         void* temp = realloc(a->array, a->size*sizeof(Token));
         if (temp == NULL) Error("Insufficient memory",INSUFFICIENT_MEMORY);
         else a->array=temp;
@@ -105,19 +92,20 @@ void RunLexer(TokenArray* token_list,const char* filename){
 
     int curr_line=1;
     int col = 1;
-    int token_index = 0;
 
     int unbound_read = False;
     char unbound_stop;
     int escaped = False;
+
     file_pt = fopen(filename,"r");
     
     char normal_tokens[40][2][10] = {
         {"CLS_PAR",")"},{"DOT","."},
         {"ADR","@"},{"PTR","^"},{"OR","or"},{"NOT","not"},{"AND","and"},{"XOR","xor"},
         {"MOD","mod"},{"IF","if"},{"DO","do"},{"VAR","var"},{"THEN","then"},{"USES","uses"},{"WHILE","while"},{"CONST","const"},{"PROGRAM","program"},{"READ","read"},{"WRITE","write"},{"BEGIN","begin"},{"INT","integer"},{"FLOAT","real"},{"CHAR","char"},{"BOOl","bool"},{"STRING","string"}
+        {"FUNCTION","function"},{"PROCEDURE","procedure"},{"WHILE","while"}
         };
-    int total_Ntokens = 24;
+    int total_Ntokens = 27;
     // char* leftovers = calloc(20,sizeof(char));/*maxx length of an identifier is 20*/
     // int leftovers_len=0;
 
@@ -130,7 +118,7 @@ void RunLexer(TokenArray* token_list,const char* filename){
                 Token t ;
                 initToken(&t,"","");
                 //if you get in here you must get one and only token!
-                /*comment*/
+                /*comment*/(*     *)
                 if (buffer[i]=='('){
                     if(buffer[i+1]=='*'){
                         initToken(&t,"MLCOMENT","");
@@ -251,7 +239,6 @@ void RunLexer(TokenArray* token_list,const char* filename){
                     }
                 }
                 //nested tokens
-                
                 else if (buffer[i]=='<'){
                     if (buffer[i+1]=='='){
                         initToken(&t,"LE","<=");
@@ -267,7 +254,7 @@ void RunLexer(TokenArray* token_list,const char* filename){
                         initToken(&t,"LT","<");
                         insertArray(token_list,t);
                         i+=1;col+=1;
-                    }
+                    } " :i "
                 }
                 else if (buffer[i]=='>'){
                     if (buffer[i+1]=='='){
@@ -304,7 +291,6 @@ void RunLexer(TokenArray* token_list,const char* filename){
                     else{
                         initToken(&t,"PLS","+");
                         insertArray(token_list,t);
-                        token_index++;
                         i+=1;col+=1;
                     }
                 }
@@ -377,7 +363,6 @@ void RunLexer(TokenArray* token_list,const char* filename){
                             }
                             if (survived){
                                 insertArray(token_list,t);
-                                token_index++;
                             }
                             else{
                                 lineError("Lexer",curr_line,col,"identifiers in Pascal have a max length of 20");
@@ -392,9 +377,11 @@ void RunLexer(TokenArray* token_list,const char* filename){
                 printf("name: %s Value: %s\n",t.name,t.value);
             }
             else{
-                // escaped characters cannot stop the unbound read
+                // escaped characters cannot stop the unbound read 
                 if (escaped) escaped = False;
                 else if (buffer[i]=='\\') escaped = True;
+                // must add a string to collect all the unbound data instead of m= length of string
+                // writing to each character to the token_list (0(nlog(n)) au lieu de 0(n**m*log(n)))
                 strncat(token_list->array[token_list->used-1].value,&buffer[i],1);
                 i+=1;col+=1;
             }
