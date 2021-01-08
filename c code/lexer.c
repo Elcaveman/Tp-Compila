@@ -81,7 +81,10 @@ int getNormalToken(Token* token_adr,char name[30],char value[50],char* buffer,in
     return 0;
     
 }
-
+void resetString(char** string){
+    memset(*string, 0, sizeof(*string));
+    (*string)[0] = "/0";
+}
 // function to make Tokens from a file
 void RunLexer(TokenArray* token_list,const char* filename){
     /* design error cuz lack of time: minimized .pas files won't work (no line breaks)*/
@@ -108,7 +111,7 @@ void RunLexer(TokenArray* token_list,const char* filename){
     int total_Ntokens = 27;
     // char* leftovers = calloc(20,sizeof(char));/*maxx length of an identifier is 20*/
     // int leftovers_len=0;
-
+    char* collector = malloc(sizeof(char)*20);
     while (fgets(buffer,420,(FILE*)file_pt)!=NULL){
         // we work with fgets like readline
         int i=0;
@@ -118,7 +121,7 @@ void RunLexer(TokenArray* token_list,const char* filename){
                 Token t ;
                 initToken(&t,"","");
                 //if you get in here you must get one and only token!
-                /*comment*/(*     *)
+                /*comment*/
                 if (buffer[i]=='('){
                     if(buffer[i+1]=='*'){
                         initToken(&t,"MLCOMENT","");
@@ -393,5 +396,6 @@ void RunLexer(TokenArray* token_list,const char* filename){
 int main(){
     TokenArray tokens;
     RunLexer(&tokens,"pascal.pas");
+    for (int i=0;i<tokens.used;i++) printf("name: %s Value: %s\n",tokens.array[i].name,tokens.array[i].value);
     return 0;
 }
