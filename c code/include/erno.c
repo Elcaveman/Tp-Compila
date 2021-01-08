@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "erno.h"
 
 /* Error type includes: Syntax error / parse error .. */
