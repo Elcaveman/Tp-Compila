@@ -66,7 +66,6 @@ int uncapCmp(char c1,char c2){
     }
     return False;
 }
-//???
 int getNormalToken(Token* token_adr,char name[30],char value[50],char* buffer,int i){
     Token t;
     int j=0;
@@ -81,11 +80,7 @@ int getNormalToken(Token* token_adr,char name[30],char value[50],char* buffer,in
     return 0;
     
 }
-void resetString(char** string){
-    memset(*string, 0, sizeof(*string));
-    (*string)[0] = "/0";
-}
-// function to make Tokens from a file
+// function to make Tokens from filename.pas 
 void RunLexer(TokenArray* token_list,const char* filename){
     /* design error cuz lack of time: minimized .pas files won't work (no line breaks)*/
     FILE* file_pt;
@@ -107,8 +102,9 @@ void RunLexer(TokenArray* token_list,const char* filename){
         {"ADR","@"},{"PTR","^"},{"OR","or"},{"NOT","not"},{"AND","and"},{"XOR","xor"},
         {"MOD","mod"},{"IF","if"},{"DO","do"},{"VAR","var"},{"THEN","then"},{"USES","uses"},{"WHILE","while"},{"CONST","const"},{"PROGRAM","program"},{"READ","read"},{"WRITE","write"},{"BEGIN","begin"},{"INT","integer"},{"FLOAT","real"},{"CHAR","char"},{"BOOl","bool"},{"STRING","string"}
         {"FUNCTION","function"},{"PROCEDURE","procedure"},{"WHILE","while"}
+        {"TRUE","true"},{"FALSE","false"},
         };
-    int total_Ntokens = 27;
+    int total_Ntokens = 29;
     // char* leftovers = calloc(20,sizeof(char));/*maxx length of an identifier is 20*/
     // int leftovers_len=0;
     char* collector = malloc(sizeof(char)*20);

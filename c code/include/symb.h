@@ -134,9 +134,26 @@ void insertSymbolToTree(ScopeTree* tree,Symbol symbol);
                 begin var x=10; end;
             this will work because the declaration comes preceeds the asignement
             so it's not the same x basically
-    5-  free
+    5-  Unique data type for value:
+        The value in a symbol is a token. the type of that token is also refered to as
+        it's name. so a symbol of this kind has only one type of values accepted
+        in our case symbols of type: INT ,FLOAT ,CHAR , STRING , BOOLEAN
+            begin var x:integer;x=20; end. 
+            parse tree-> {{
+                    {NULL,NULL},
+                    [{x,null,INTEGER}] -> [{x,20,INTEGER}]
+                }
+                0,{NULL,NULL}}
+    6-  free
         A symbol of this kind is free of all the above conditions
 */
-void semantic_uses(ScopeTree* tree_root,ScopeTree* curent_tree,Symbol symbol);
+// scopes are also symbols they're just a bit special
+int semantic_Program(ScopeTree* tree_root,ScopeTree* curent_tree,Symbol symbol);
+int semantic_Uses(ScopeTree* tree_root,ScopeTree* curent_tree,Symbol symbol);
+int semantic_UniqueDeclarationRS(ScopeTree* tree_root,ScopeTree* curent_tree,Symbol symbol, Token type);
+int semantic_UniqueDeclarationR(ScopeTree* tree_root,ScopeTree* curent_tree,Symbol symbol, Token type);
+int semantic_UniqueAssign(ScopeTree* tree_root,ScopeTree* curent_tree,Symbol symbol, Token type);
+int semantic_UniqueDataType(ScopeTree* tree_root,ScopeTree* curent_tree,Symbol symbol, Token type);
+int semantic_free(ScopeTree* tree_root,ScopeTree* curent_tree,Symbol symbol);
 
 #endif

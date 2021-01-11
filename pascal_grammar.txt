@@ -9,12 +9,12 @@ PROGRAM := program id; uses id; (FPBLOCK;)* BLOCK.
 FPBLOCK := (FUNC|PROC) BLOCK
 FUNC := function id(FUNCARGS) : DataType;
 PROC := procedure id(FUNCARGS);
-BLOCK := CONSTS* VAR* INSTS
+BLOCK := CONST* VAR* INSTS
 
 FUNCARGS := FUNCARGS,FUNCARG|FUNCARG|    //not used for calling the function but for defining it
 FUNCARG := ASGN_EXP|TUPLE:DataType
 
-CONSTS := const ASGN_EXP;|const id;|const TUPLE : DataType;|
+CONST := const ASGN_EXP;|const id;|const TUPLE : DataType;|
 VAR := var ASGN_EXP;|var id;|var TUPLE : DataType;|
 TUPLE := TUPLE,id|id|
 

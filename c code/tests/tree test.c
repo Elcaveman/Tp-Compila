@@ -10,12 +10,13 @@ typedef struct tree{
     KEK tuple;
     struct tree* subtrees;
 }Tree;
-//test1: updating tree using adresses directly
+// test1: updating tree using adresses directly
 // remarks: an incomplete structure can't have an array of itself inside
 // aka struct tree subtrees[15] doesn't work so we have to use pointers and malloc
 // and realloc stuff and beware because using multiple varriables adresses
 // to insert stuff near the pointer will cause chaos so malloc (aka make neigbours for
 // the pointer then use the varriables data to fill the created memory points)
+
 int test1(){
     KEK tup1 = {0,2};
     KEK tup2 = {1,2};
@@ -59,8 +60,21 @@ int test1(){
 // let's initialise the first one: [data,tree1,X]
 // [data_tree1,X1,X1] so as u notice we allocated 2 other subtrees in tree 1
 // problem is since &(tree+1) = &X =&X1 the palce we allocated for X gets filled
-// thus creating a huuuge issue that breaks our current approach 
+// thus creating a huuuge issue that breaks our current approach
+// -> i've been avoiding linked lists but now i have to use them  
+
+typedef struct tree{
+    KEK tuple;
+    struct linkd{
+        struct tree* curr_subtree;
+        struct linkd* NEXT; 
+    }subtrees;
+}Tree2;
+int test2(){
+    
+}
 int main()
 {
-    test1():
+    test1();
+    test2();
 }
